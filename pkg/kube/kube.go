@@ -12,7 +12,7 @@ import (
 
 type KubeClient struct {
 	clientset *kubernetes.Clientset
-    ctx context.Context
+	ctx       context.Context
 }
 
 func NewKubeClient(
@@ -20,7 +20,7 @@ func NewKubeClient(
 ) *KubeClient {
 	return &KubeClient{
 		clientset: clientset,
-        ctx: context.Background(),
+		ctx:       context.Background(),
 	}
 }
 
@@ -39,7 +39,7 @@ func (k *KubeClient) ActivePods(namespace, nodeName string) ([]api_v1.Pod, error
 	activePods, err := k.clientset.CoreV1().Pods(
 		namespace,
 	).List(
-        k.ctx,
+		k.ctx,
 		metav1.ListOptions{FieldSelector: fieldSelector.String()},
 	)
 	if err != nil {

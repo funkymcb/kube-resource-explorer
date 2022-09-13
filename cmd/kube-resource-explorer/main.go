@@ -3,14 +3,16 @@ package main
 import (
 	"flag"
 	"fmt"
+	"log"
 	"os"
 	"path/filepath"
+	"runtime"
 	"strings"
 	"time"
 
 	"github.com/funkymcb/kube-resource-explorer/pkg/kube"
 
-	"k8s.io/api/core/v1"
+	v1 "k8s.io/api/core/v1"
 	"k8s.io/client-go/kubernetes"
 	_ "k8s.io/client-go/plugin/pkg/client/auth/gcp"
 	"k8s.io/client-go/tools/clientcmd"
@@ -26,6 +28,13 @@ func homeDir() string {
 }
 
 func main() {
+	log.Printf(
+		"Build information {OS:%q Arch:%q GitCommit:%q, GoVersion:%q}\n",
+		runtime.GOOS,
+		runtime.GOARCH,
+		GitCommit,
+		runtime.Version(),
+	)
 
 	default_duration, err := time.ParseDuration("4h")
 	if err != nil {
