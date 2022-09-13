@@ -5,7 +5,7 @@ Fork of [kube-resource-explorer](https://github.com/dpetzold/kube-resource-explo
 ## My Changes
 - updated modules and go version
 - fixed kube handling
-- parse multiple kubeconfigs in one path (eg.: path/to/config1:path/to/config2)
+- optimize a few error outputs
 - removed vendor folder (maybe just because i don't understand the use of it)
 - add binary releases
 

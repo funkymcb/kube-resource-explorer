@@ -56,6 +56,10 @@ func main() {
 	)
 
 	if kubeenv := os.Getenv("KUBECONFIG"); kubeenv != "" {
+		if strings.Contains(kubeenv, ":") {
+			log.Println("echo $KUBECONFIG:", kubeenv)
+			log.Fatalln("multiple configs found in $KUBECONFIG. pls specify config via -kubeconfig flag")
+		}
 		kubeconfig = flag.String("kubeconfig", kubeenv, "absolute path to the kubeconfig file")
 	} else if home := homeDir(); home != "" {
 		kubeconfig = flag.String("kubeconfig", filepath.Join(home, ".kube", "config"), "(optional) absolute path to the kubeconfig file")
