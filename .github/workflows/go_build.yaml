@@ -34,6 +34,7 @@ jobs:
       name: create binary
       with:
         github_token: ${{ secrets.PAT }}
+        overwrite: true
         goos: ${{ matrix.goos }}
         goarch: ${{ matrix.goarch }}
         goversion: "https://dl.google.com/go/go${{ steps.go_version.outputs.prop }}.linux-amd64.tar.gz"
