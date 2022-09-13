@@ -30,7 +30,7 @@ jobs:
         path: 'release.json'
         prop_path: 'go_version'
 
-    - uses: wangyoucao577/go-release-action@v1.31
+    - uses: wangyoucao577/go-release-action@v1.30
       name: create binary
       with:
         github_token: ${{ secrets.PAT }}
