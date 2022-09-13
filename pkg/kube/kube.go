@@ -3,6 +3,7 @@ package kube
 import (
 	"fmt"
 
+	"golang.org/x/net/context"
 	api_v1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/fields"
@@ -11,6 +12,7 @@ import (
 
 type KubeClient struct {
 	clientset *kubernetes.Clientset
+    ctx context.Context
 }
 
 func NewKubeClient(
@@ -18,6 +20,7 @@ func NewKubeClient(
 ) *KubeClient {
 	return &KubeClient{
 		clientset: clientset,
+        ctx: context.Background(),
 	}
 }
 
@@ -33,9 +36,10 @@ func (k *KubeClient) ActivePods(namespace, nodeName string) ([]api_v1.Pod, error
 		return nil, err
 	}
 
-	activePods, err := k.clientset.Core().Pods(
+	activePods, err := k.clientset.CoreV1().Pods(
 		namespace,
 	).List(
+        k.ctx,
 		metav1.ListOptions{FieldSelector: fieldSelector.String()},
 	)
 	if err != nil {
@@ -52,7 +56,7 @@ func containerRequestsAndLimits(container *api_v1.Container) (reqs api_v1.Resour
 		if _, ok := reqs[name]; ok {
 			panic(fmt.Sprintf("Duplicate key: %s", name))
 		} else {
-			reqs[name] = *quantity.Copy()
+			reqs[name] = quantity.DeepCopy()
 		}
 	}
 
@@ -60,7 +64,7 @@ func containerRequestsAndLimits(container *api_v1.Container) (reqs api_v1.Resour
 		if _, ok := limits[name]; ok {
 			panic(fmt.Sprintf("Duplicate key: %s", name))
 		} else {
-			limits[name] = *quantity.Copy()
+			limits[name] = quantity.DeepCopy()
 		}
 	}
 	return
@@ -76,8 +80,8 @@ func NodeCapacity(node *api_v1.Node) api_v1.ResourceList {
 
 func (k *KubeClient) NodeResources(namespace, nodeName string) (resources []*ContainerResources, err error) {
 
-	mc := k.clientset.Core().Nodes()
-	node, err := mc.Get(nodeName, metav1.GetOptions{})
+	mc := k.clientset.CoreV1().Nodes()
+	node, err := mc.Get(k.ctx, nodeName, metav1.GetOptions{})
 	if err != nil {
 		return nil, err
 	}
@@ -125,7 +129,7 @@ func (k *KubeClient) NodeResources(namespace, nodeName string) (resources []*Con
 }
 
 func (k *KubeClient) ContainerResources(namespace string) (resources []*ContainerResources, err error) {
-	nodes, err := k.clientset.CoreV1().Nodes().List(metav1.ListOptions{})
+	nodes, err := k.clientset.CoreV1().Nodes().List(k.ctx, metav1.ListOptions{})
 	if err != nil {
 		return nil, err
 	}
@@ -142,7 +146,7 @@ func (k *KubeClient) ContainerResources(namespace string) (resources []*Containe
 }
 
 func (k *KubeClient) ClusterCapacity() (capacity api_v1.ResourceList, err error) {
-	nodes, err := k.clientset.CoreV1().Nodes().List(metav1.ListOptions{})
+	nodes, err := k.clientset.CoreV1().Nodes().List(k.ctx, metav1.ListOptions{})
 	if err != nil {
 		return nil, err
 	}
@@ -158,7 +162,7 @@ func (k *KubeClient) ClusterCapacity() (capacity api_v1.ResourceList, err error)
 				value.Add(quantity)
 				capacity[name] = value
 			} else {
-				capacity[name] = *quantity.Copy()
+				capacity[name] = quantity.DeepCopy()
 			}
 		}
 

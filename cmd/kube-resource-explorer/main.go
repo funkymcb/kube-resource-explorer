@@ -8,7 +8,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/dpetzold/kube-resource-explorer/pkg/kube"
+	"github.com/funkymcb/kube-resource-explorer/pkg/kube"
 
 	"k8s.io/api/core/v1"
 	"k8s.io/client-go/kubernetes"

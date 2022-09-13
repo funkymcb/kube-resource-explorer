@@ -1,8 +1,13 @@
 Resource Explorer
 ================
 
-[![CircleCI](https://circleci.com/gh/dpetzold/kube-resource-explorer.svg?style=svg)](https://circleci.com/gh/dpetzold/kube-resource-explorer)
-
+Fork of [kube-resource-explorer](https://github.com/dpetzold/kube-resource-explorer) by dpetzold 
+## My Changes
+- updated modules and go version
+- fixed kube handling
+- parse multiple kubeconfigs in one path (path/to/config1:path/to/config2)
+- removed vendor folder (maybe just because i don't understand the use of it)
+- binary release
 
 Explore your kube resource usage and allocation.
 

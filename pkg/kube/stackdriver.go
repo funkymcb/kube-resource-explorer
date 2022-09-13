@@ -7,7 +7,7 @@ import (
 	"time"
 
 	monitoring "cloud.google.com/go/monitoring/apiv3"
-	log "github.com/Sirupsen/logrus"
+	log "github.com/sirupsen/logrus"
 
 	"k8s.io/api/core/v1"
 
@@ -83,7 +83,7 @@ func evaluateMemMetrics(it *monitoring.TimeSeriesIterator) *ContainerMetrics {
 	}
 
 	var data []int64
-	for k, _ := range set {
+    for k := range set {
 		data = append(data, k)
 	}
 
